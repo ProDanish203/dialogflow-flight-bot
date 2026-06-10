@@ -1,0 +1,26 @@
+services:
+  api:
+    build: ./server
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./server/.env
+    volumes:
+      - ./server/credentials.json:/app/credentials.json:ro
+    environment:
+      PORT: 8000
+      CORS_ORIGINS: http://localhost:3000
+      BASE_DOMAIN: http://localhost:3000
+      GOOGLE_APPLICATION_CREDENTIALS: /app/credentials.json
+
+  web:
+    build:
+      context: ./client
+    env_file:
+      - ./client/.env
+    ports:
+      - "3000:3000"
+    environment:
+      BASE_DOMAIN: http://localhost:3000
+    depends_on:
+      - api
